@@ -43,6 +43,6 @@ class JSONSaver(Saver):
     def get_vacancies_by_salary(self):
         pass
 
-    def delete_vacancy(self):
+    def delete_vacancies(self):
         os.remove(self.file_name)
 

@@ -65,6 +65,6 @@ def user_interaction():
           "2. нет\n")
     off = int(input())
     if off == 2:
-        js_saver.delete_vacancy()
+        js_saver.delete_vacancies()
 
 
