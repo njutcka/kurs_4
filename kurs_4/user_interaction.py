@@ -14,34 +14,24 @@ def user_interaction():
     #пользоваетль выбирает с какого сайта будут вакансии с одного или сразу с обоих
     while True:
         site_selection = input()
-        if site_selection == '1':
+        api_list = []
+        all_vacancies = []
+        if site_selection in ('1', '3'):
             hh_api = HeadHunterAPI()
-            hh_vacancies = hh_api.get_vacancies(search_query)
-            all_vacancies = hh_api.get_formatted_vacancies(hh_vacancies)
-            js_saver = JSONSaver(search_query)
-            js_saver.save_vacancies(all_vacancies)
-            break
-        elif site_selection == '2':
+            api_list.append(hh_api)
+        if site_selection in ('2', '3'):
             sj_api = SuperJobAPI()
-            sj_vacancies = sj_api.get_vacancies(search_query)
-            all_vacancies = sj_api.get_formatted_vacancies(sj_vacancies)
-            js_saver = JSONSaver(search_query)
-            js_saver.save_vacancies(all_vacancies)
-            break
-        elif site_selection == '3':
-            hh_api = HeadHunterAPI()
-            hh_vacancies = hh_api.get_vacancies(search_query)
-            hh_formatted_vacancies = hh_api.get_formatted_vacancies(hh_vacancies)
-            sj_api = SuperJobAPI()
-            sj_vacancies = sj_api.get_vacancies(search_query)
-            sj_formatted_vacancies = sj_api.get_formatted_vacancies(sj_vacancies)
-            all_vacancies = hh_formatted_vacancies + sj_formatted_vacancies
-            js_saver = JSONSaver(search_query)
-            js_saver.save_vacancies(all_vacancies)
-            break
-        else:
-            print('Выберите 1, 2 или 3.')
+            api_list.append(sj_api)
+        if site_selection not in ('1', '2', '3'):
+            print('Выберите 1, 2 или 3')
+            continue
 
+        for api in api_list:
+            api_vacancies = api.get_vacancies(search_query)
+        all_vacancies.extend(api.get_formatted_vacancies(api_vacancies))
+        js_saver = JSONSaver(search_query)
+        js_saver.save_vacancies(all_vacancies)
+        break
 
     #создаем экземпляры класса Vacancy по данным из файла
     vacancies = js_saver.select_vacancies()
@@ -56,6 +46,7 @@ def user_interaction():
             print('1. Вывести топ вакансий по зарплате.\n'
                   '2. Список вакансий по выбранному городу.\n'
                   '3. Список вакансий по желаемой зарплате.')
+
             while True:
                 how_show = input()
                 if how_show == '1':
