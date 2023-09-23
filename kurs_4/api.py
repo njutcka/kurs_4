@@ -19,14 +19,14 @@ class HeadHunterAPI(API):
         vacancies = response.json()['items']
         return vacancies
 
-    def get_formated_vacancies(self, vacancies):
-        formated_vacancies = []
+    def get_formatted_vacancies(self, vacancies):
+        formatted_vacancies = []
         with open('../currency.json') as file:
             currencies = json.load(file)
         for vacancy in vacancies:
             salary = vacancy['salary']['from'] if vacancy['salary'] else None
             currency = vacancy['salary']['currency'] if vacancy['salary'] else None
-            formated_vacancies.append({
+            formatted_vacancies.append({
                 'name': vacancy['name'],
                 'salary': salary,
                 'currency': currency,
@@ -35,7 +35,7 @@ class HeadHunterAPI(API):
                 'url': vacancy['alternate_url'],
                 'api': 'HH'
             })
-        return formated_vacancies
+        return formatted_vacancies
 
 class SuperJobAPI(API):
     def get_vacancies(self, search_query):
@@ -50,12 +50,12 @@ class SuperJobAPI(API):
         vacancies = response.json()['objects']
         return vacancies
 
-    def get_formated_vacancies(self, vacancies):
-        formated_vacancies = []
+    def get_formatted_vacancies(self, vacancies):
+        formatted_vacancies = []
         for vacancy in vacancies:
             salary = vacancy['payment_from'] if vacancy['payment_from'] else None
             currency = vacancy['currency'] if vacancy['currency'] else None
-            formated_vacancies.append({
+            formatted_vacancies.append({
                 'name': vacancy['profession'],
                 'salary': salary,
                 'currency': currency,
@@ -64,4 +64,4 @@ class SuperJobAPI(API):
                 'url': vacancy['link'],
                 'api': 'SJ'
             })
-        return formated_vacancies
+        return formatted_vacancies

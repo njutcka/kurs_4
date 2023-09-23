@@ -39,7 +39,7 @@ class Vacancy:
         filtered_vacancies = []
         for vacancy in vacancies:
             v = vacancy.__str__()
-            if v.lower() == filter_word:
+            if v.lower() == filter_word.lower():
                 filtered_vacancies.append(vacancy)
                 print(vacancy.__repr__())
             else:

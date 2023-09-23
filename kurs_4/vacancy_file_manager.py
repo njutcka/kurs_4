@@ -40,9 +40,19 @@ class JSONSaver(Saver):
         with open("vacansies.json", "w", encoding="utf-8") as json_file:
             json.dump(content.append(vacancy.__dict__()), json_file, ensure_ascii=False, indent=2)
 
-    def get_vacancies_by_salary(self):
-        pass
+    def get_vacancies_by_salary(self, min_salary):
+        with open(self.file_name, "r", encoding="utf-8") as json_file:
+            vacancies = json.load(json_file)
+            get_vacancies = []
+        for v in vacancies:
+            if not v['salary'] == None:
+                if not v['currency_value'] == None:
+                    if int(v['salary'])*float(v['currency_value']) >= min_salary:
+                        get_vacancies.append(v)
+                continue
+            continue
+        vacancies = [Vacancy(**v) for v in get_vacancies]
+        return vacancies
 
-    def delete_vacancies(self):
+    def delete_vacancy(self):
         os.remove(self.file_name)
-
