@@ -3,10 +3,10 @@ import os
 from kurs_4.vacancy import Vacancy
 from abc import ABC, abstractmethod
 
-# Сохранение информации о вакансиях в файл
 class Saver(ABC):
+    """Абстрактный класс, для сохранения данных о вакансиях в файл"""
     @abstractmethod
-    def add_vacancy(self):
+    def save_vacancies(self):
         pass
 
     @abstractmethod
@@ -19,40 +19,39 @@ class Saver(ABC):
 
 
 class JSONSaver(Saver):
+    """Класс, для сохранения данных о вакансиях в json файл"""
     def __init__(self, key_word):
+        """Метод инициализации экземпляра класса с полем имя файла
+        принимает: ключевое слово для поиска вакансий запрощенное от пользователя"""
         self.file_name = f'{key_word.title()}.json'
 
     def save_vacancies(self, vacancies):
+        """Метод записи вакансий в файл"""
         with open(self.file_name, "w", encoding="utf-8") as json_file:
             json.dump(vacancies, json_file, ensure_ascii=False, indent=2)
 
     def select_vacancies(self):
+        """Метод для создания списка экземпляров класса Vacancy по данным из файла
+        возвращает: список вакансий"""
         with open(self.file_name, "r", encoding="utf-8") as json_file:
             vacancies = json.load(json_file)
         vacancies = [Vacancy(**v) for v in vacancies]
         return vacancies
 
-    @staticmethod
-    def add_vacancy(vacancy):
-        with open("vacansies.json", "r", encoding="utf-8") as json_file:
-            content = json.load(json_file)
-        content.append(vacancy.__dict__())
-        with open("vacansies.json", "w", encoding="utf-8") as json_file:
-            json.dump(content.append(vacancy.__dict__()), json_file, ensure_ascii=False, indent=2)
-
     def get_vacancies_by_salary(self, min_salary):
+        """Метод выводит список вакансий из файла, выбирая по зарплате
+        принимает: минимальную зарплату (от пользователя)"""
         with open(self.file_name, "r", encoding="utf-8") as json_file:
             vacancies = json.load(json_file)
-            get_vacancies = []
         for v in vacancies:
             if not v['salary'] == None:
                 if not v['currency_value'] == None:
                     if int(v['salary'])*float(v['currency_value']) >= min_salary:
-                        get_vacancies.append(v)
+                        vacancy = Vacancy(**v)
+                        print(vacancy.__repr__())
                 continue
             continue
-        vacancies = [Vacancy(**v) for v in get_vacancies]
-        return vacancies
 
     def delete_vacancy(self):
+        """Метод удаляет файл с данными"""
         os.remove(self.file_name)

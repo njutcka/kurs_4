@@ -3,14 +3,18 @@ import json
 import requests
 from pprint import pprint
 
-# Создание экземпляра класса для работы с API сайтов с вакансиями
 class API(ABC):
+    """Абстрактный класс для работы с API сайтов с вакансиями"""
     @abstractmethod
     def get_vacancies(self, search_query):
         pass
 
 class HeadHunterAPI(API):
+    """Класс для работы с api сайта HeadHanter"""
     def get_vacancies(self, search_query):
+        """Получает с сайта список из первых 100 вакансий
+        принимает: ключевое слово
+        возвращвет: список"""
         params = {
             "text": search_query,
             "per_page": 100
@@ -20,6 +24,9 @@ class HeadHunterAPI(API):
         return vacancies
 
     def get_formatted_vacancies(self, vacancies):
+        """Приводит вакансии к стандартному виду
+        принимает: список вакансий
+        возвращает: отформатированный список вакансий"""
         formatted_vacancies = []
         with open('../currency.json') as file:
             currencies = json.load(file)
@@ -38,7 +45,11 @@ class HeadHunterAPI(API):
         return formatted_vacancies
 
 class SuperJobAPI(API):
+    """Класс для работы с api сайта SuperJob"""
     def get_vacancies(self, search_query):
+        """Получает с сайта список из первых 100 вакансий
+                принимает: ключевое слово
+                возвращвет: список"""
         headers = {
             'X-Api-App-Id': 'v3.r.137832039.131046b8364dfa6a6a3351df7b2e9cb4b9277f47.78a0807c6f0e0d78ba965412fef552960f49ab39'
         }
@@ -51,6 +62,9 @@ class SuperJobAPI(API):
         return vacancies
 
     def get_formatted_vacancies(self, vacancies):
+        """Приводит вакансии к стандартному виду
+        принимает: список вакансий
+        возвращает: отформатированный список вакансий"""
         formatted_vacancies = []
         for vacancy in vacancies:
             salary = vacancy['payment_from'] if vacancy['payment_from'] else None
